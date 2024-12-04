@@ -157,7 +157,7 @@ class StudentReportGenerator:
             ])
         
         # Match the width of the student details table
-        table = Table(data, colWidths=[2.5*inch, 1.25*inch, 1.25*inch, 1*inch])
+        table = Table(data)
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), self.primary_color),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),

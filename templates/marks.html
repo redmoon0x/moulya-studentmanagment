@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Marks Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a8a4e6;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-color: #2d3436;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --danger-color: #d63031;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 40px;
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin: 0;
+            letter-spacing: -1px;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin: 10px 0 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .table-container {
+            margin-top: 30px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+
+        .marks-cell {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .marks-good {
+            color: var(--success-color);
+        }
+
+        .marks-warning {
+            color: var(--warning-color);
+        }
+
+        .marks-poor {
+            color: var(--danger-color);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .no-data i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Moulya</h1>
+            <h2><i class="fas fa-graduation-cap"></i> Internal Marks Details</h2>
+        </div>
+
+        {% if marks_data.empty %}
+            <div class="no-data">
+                <i class="fas fa-search"></i>
+                <p>No marks data found.</p>
+            </div>
+        {% else %}
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3><i class="fas fa-users"></i> Total Students</h3>
+                    <div class="value">{{ marks_data['Roll Number'].nunique() }}</div>
+                </div>
+                <div class="summary-card">
+                    <h3><i class="fas fa-book"></i> Total Subjects</h3>
+                    <div class="value">{{ marks_data['Subject'].nunique() }}</div>
+                </div>
+                <div class="summary-card">
+                    <h3><i class="fas fa-star"></i> Average Score</h3>
+                    <div class="value">
+                        {{ ((marks_data['Internal 1'].mean() + marks_data['Internal 2'].mean()) / 2) | round(1) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-id-card"></i> Roll Number</th>
+                            <th><i class="fas fa-user"></i> Name</th>
+                            <th><i class="fas fa-registered"></i> Reg No</th>
+                            <th><i class="fas fa-book"></i> Subject</th>
+                            <th><i class="fas fa-pen"></i> Internal 1</th>
+                            <th><i class="fas fa-pen"></i> Internal 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, row in marks_data.iterrows() %}
+                            <tr>
+                                <td>{{ row['Roll Number'] }}</td>
+                                <td>{{ row['Name'] }}</td>
+                                <td>{{ row['Reg No'] }}</td>
+                                <td>{{ row['Subject'] }}</td>
+                                <td class="marks-cell 
+                                    {% if row['Internal 1'] >= 15 %}marks-good
+                                    {% elif row['Internal 1'] >= 10 %}marks-warning
+                                    {% else %}marks-poor{% endif %}">
+                                    {{ row['Internal 1'] }}
+                                </td>
+                                <td class="marks-cell
+                                    {% if row['Internal 2'] >= 15 %}marks-good
+                                    {% elif row['Internal 2'] >= 10 %}marks-warning
+                                    {% else %}marks-poor{% endif %}">
+                                    {{ row['Internal 2'] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Add loading state when navigating
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', () => {
+                    document.body.classList.add('loading');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

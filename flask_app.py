@@ -163,6 +163,46 @@ def login():
     
     return render_template('login.html')
 
+@app.route('/resetpassword', methods=['GET', 'POST'])  # Changed from update_password to resetpassword
+def resetpassword():  # Changed function name to match route
+    roll_no = session.get('roll_no')
+    if not roll_no:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        current_password = request.form['current_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        
+        # Fetch the user details from the database
+        try:
+            conn = sqlite3.connect('users.db')
+            c = conn.cursor()
+            c.execute("SELECT * FROM users WHERE roll_no=?", (roll_no,))
+            user = c.fetchone()
+            
+            if user and check_password_hash(user[2], current_password):
+                if new_password == confirm_password:
+                    # Hash the new password
+                    hashed_password = generate_password_hash(new_password)
+                    
+                    # Update the password in the database
+                    c.execute("UPDATE users SET password_hash=? WHERE roll_no=?", 
+                            (hashed_password, roll_no))
+                    conn.commit()
+                    flash("Password updated successfully!", "success")
+                    return redirect(url_for('dashboard'))
+                else:
+                    flash("New password and confirm password do not match.", "error")
+            else:
+                flash("Current password is incorrect.", "error")
+        except sqlite3.Error as e:
+            flash(f"An error occurred: {str(e)}", "error")
+        finally:
+            conn.close()
+    
+    return render_template('resetpassword.html')
+
 @app.route('/dashboard')
 def dashboard():
     roll_no = session.get('roll_no')
