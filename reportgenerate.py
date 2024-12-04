@@ -7,6 +7,7 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.colors import HexColor
 import pandas as pd
 from datetime import datetime
+import os
 
 class StudentReportGenerator:
     def __init__(self):
@@ -284,4 +285,5 @@ class StudentReportGenerator:
         content.extend(self.create_marks_table(marks_data))
         
         doc.build(content)
+        os.remove(output_path)
         return output_path
